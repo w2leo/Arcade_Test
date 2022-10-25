@@ -7,6 +7,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private float moveSpeed;
+    [SerializeField] private float acceleration;
     [SerializeField] private Joystick joysticInput;
     private Rigidbody playerRb;
 
@@ -15,11 +16,13 @@ public class PlayerMovement : MonoBehaviour
         playerRb = GetComponent<Rigidbody>();
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         Vector3 direction = GetDirection();
-        transform.position += direction * moveSpeed * Time.fixedDeltaTime;
-        //playerRb.AddForce(direction * moveSpeed * Time.fixedDeltaTime, ForceMode.VelocityChange);
+        //transform.position += direction * moveSpeed * Time.deltaTime;
+        //playerRb.AddForce(direction * moveSpeed, ForceMode.Force);
+        //playerRb.velocity = direction * moveSpeed;
+        playerRb.velocity = Vector3.Lerp(playerRb.velocity, direction * moveSpeed, acceleration * Time.deltaTime);
     }
 
     private Vector3 GetDirection()
@@ -33,9 +36,11 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector3 GetKeybordDirection()
     {
-        return Vector3.forward * Input.GetAxis("Vertical") + Vector3.right * Input.GetAxis("Horizontal");
+        Vector3 direction = Vector3.forward * Input.GetAxis("Vertical") + Vector3.right * Input.GetAxis("Horizontal");
+        if (direction.magnitude > 1)
+            direction = direction.normalized;
+        return direction;
     }
-
     private bool TryJoysticInput(out Vector3 direction)
     {
         direction = joysticInput.Direction3d;
