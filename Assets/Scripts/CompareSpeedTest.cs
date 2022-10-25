@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class CompareSpeedTest : MonoBehaviour
 {
+    //CompareSpeedTest.TEST_COMPARE<Player, Item>(other.transform, "Player", "MainCamera", 100000);
+
+    //Tested compare speed
+    //CompareTag vs GetComponent vs TryGetComponent.
+    //For best time - CompareTag
+    //For minimal errors(with string in CompareTag) - better to use TryGetComponent<>
+
     public static void TEST_COMPARE<T, W> (Transform other, string trueCompare, string falseCompare, int maxIterarions)
     {
         float startTime;
