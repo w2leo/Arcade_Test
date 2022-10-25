@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerMovement : MonoBehaviour
 {
@@ -16,20 +17,30 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //Vector3 direction = Vector3.forward * joysticInput.Vertical + Vector3.right * joysticInput.Horizontal;
         Vector3 direction = GetDirection();
-        playerRb.AddForce(direction * moveSpeed * Time.fixedDeltaTime, ForceMode.VelocityChange);
+        transform.position += direction * moveSpeed * Time.fixedDeltaTime;
+        //playerRb.AddForce(direction * moveSpeed * Time.fixedDeltaTime, ForceMode.VelocityChange);
     }
 
     private Vector3 GetDirection()
     {
-#if UNITY_ANDROID
-        return Vector3.forward * joysticInput.Vertical + Vector3.right * joysticInput.Horizontal;
-#endif
-
-#if UNITY_STANDALONE
-        return Vector3.forward * Input.GetAxis("Vertical") + Vector3.right * Input.GetAxis("Horizontal");
-#endif
+        if (!TryJoysticInput(out Vector3 newDirection))
+        {
+            newDirection = GetKeybordDirection();
+        }
+        return newDirection;
     }
 
+    private Vector3 GetKeybordDirection()
+    {
+        return Vector3.forward * Input.GetAxis("Vertical") + Vector3.right * Input.GetAxis("Horizontal");
+    }
+
+    private bool TryJoysticInput(out Vector3 direction)
+    {
+        direction = joysticInput.Direction3d;
+        if (direction != Vector3.zero)
+            return true;
+        return false;
+    }
 }
