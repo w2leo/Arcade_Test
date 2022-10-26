@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5691665061778067209}
   - component: {fileID: 8828936564077401735}
   m_Layer: 0
-  m_Name: 'FX_Fireworks_Blue_Small '
+  m_Name: Explosion_small_yellow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -48,7 +48,7 @@ ParticleSystem:
   ringBufferLoopRange: {x: 0, y: 1}
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   useRigidbodyForVelocity: 1

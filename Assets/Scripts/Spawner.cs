@@ -5,13 +5,13 @@ using UnityEngine.UI;
 
 public class Spawner : MonoBehaviour
 {
-    [SerializeField] private int screensForItem;
     [SerializeField] List<Item> itemPrefabs;
     [SerializeField] ParticleSystem particleExplosion;
     [SerializeField] Ground ground;
     [SerializeField] CameraMove mainCameraMove;
-    [SerializeField] InputField inputN;
+    [SerializeField] TMP_InputInt inputScreensForItem;
     private List<Item> spawnedItems;
+    private int spawnCount;
 
     private void Awake()
     {
@@ -20,20 +20,12 @@ public class Spawner : MonoBehaviour
         SpawnNewItems(CountItemsToSpawn());   
     }
 
-    public void SpawnNewItems()
+    public void RespawnAllItems()
     {
         DestroyAllItems();
         SpawnNewItems(CountItemsToSpawn());
     }
 
-    private int CountItemsToSpawn() // Not Implemented
-    {
-        int screensCount = Mathf.RoundToInt((ground.Area / CameraViewState.ViewArea));
-        int result = Mathf.RoundToInt(screensCount / screensForItem);
-        Debug.Log($"rArea = {ground.Area}, viewArea = {CameraViewState.ViewArea}, screensCount = {screensCount}, items = {result}");
-                
-        return result;
-    }
 
     private void SpawnNewItems(int countItems)
     {
@@ -43,6 +35,14 @@ public class Spawner : MonoBehaviour
             spawnedItems.Add(newItem);
             newItem.FirstInitialize(GetRandomPosition(ground.xMax, ground.zMax, newItem.Size), particleExplosion);
         }
+        spawnCount = countItems;
+    }
+
+    private int CountItemsToSpawn()
+    {
+        int screensCount = Mathf.RoundToInt((ground.Area / CameraViewState.ViewArea));
+        int result = Mathf.RoundToInt(screensCount / inputScreensForItem.InputValue);
+        return result;
     }
 
     private void DestroyAllItems()

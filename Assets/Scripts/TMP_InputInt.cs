@@ -16,15 +16,28 @@ public class TMP_InputInt : MonoBehaviour
     private void Awake()
     {
         field = GetComponent<TMP_InputField>();
+        CheckIntInput();
     }
     
     public void CheckIntInput()
     {
-        Debug.Log("Check input INT");
-        if (!int.TryParse(field.text, out inputValue))
+        if (!TryParceIntNotZero(field.text, out inputValue))
         {
             inputValue = defaultIntValue;
             field.text = inputValue.ToString();
         }
+    }
+
+    private bool TryParceIntNotZero(string text, out int intValue)
+    {
+        if (!int.TryParse(text, out intValue))
+        {
+            return false;
+        }
+        else if (intValue == 0)
+        {
+            return false;
+        }
+        return true;
     }
 }

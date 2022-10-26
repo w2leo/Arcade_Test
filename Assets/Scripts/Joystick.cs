@@ -5,11 +5,6 @@ using UnityEngine.EventSystems;
 
 public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
 {
-    public float Horizontal => input.x;
-    public float Vertical => input.y;
-    public Vector2 Direction2D => new Vector2(Horizontal, Vertical);
-    public Vector3 Direction3d => new Vector3(Horizontal, 0, Vertical);
-
     [SerializeField] private float handleRange = 1;
     [SerializeField] private float deadZone = 0;
     [SerializeField] protected RectTransform background = null;
@@ -17,11 +12,17 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
 
     private Canvas canvas;
     private Camera cam;
+    private Vector2 input;
 
-    private Vector2 input = Vector2.zero;
+    public float Horizontal => input.x;
+    public float Vertical => input.y;
+    public Vector2 Direction2D => new Vector2(Horizontal, Vertical);
+    public Vector3 Direction3d => new Vector3(Horizontal, 0, Vertical);
 
-    private void Start()
+
+    private void Awake()
     {
+        input = Vector2.zero;
         canvas = GetComponentInParent<Canvas>();
         if (canvas == null)
             Debug.LogError("The Joystick is not placed inside a canvas");
@@ -49,6 +50,12 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
         handle.anchoredPosition = input * radius * handleRange;
     }
 
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        input = Vector2.zero;
+        handle.anchoredPosition = Vector2.zero;
+    }
+
     private void HandleInput(float magnitude, Vector2 normalised, Vector2 radius)
     {
         if (magnitude > deadZone)
@@ -58,11 +65,5 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
         }
         else
             input = Vector2.zero;
-    }
-
-    public void OnPointerUp(PointerEventData eventData)
-    {
-        input = Vector2.zero;
-        handle.anchoredPosition = Vector2.zero;
     }
 }

@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private float moveSpeed;
     [SerializeField] private float acceleration;
     [SerializeField] private Joystick joysticInput;
+    
     private Rigidbody playerRb;
 
     private void Start()
@@ -19,9 +19,6 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         Vector3 direction = GetDirection();
-        //transform.position += direction * moveSpeed * Time.deltaTime;
-        //playerRb.AddForce(direction * moveSpeed, ForceMode.Force);
-        //playerRb.velocity = direction * moveSpeed;
         playerRb.velocity = Vector3.Lerp(playerRb.velocity, direction * moveSpeed, acceleration * Time.deltaTime);
     }
 
@@ -41,6 +38,7 @@ public class PlayerMovement : MonoBehaviour
             direction = direction.normalized;
         return direction;
     }
+
     private bool TryJoysticInput(out Vector3 direction)
     {
         direction = joysticInput.Direction3d;

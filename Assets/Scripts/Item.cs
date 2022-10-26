@@ -2,18 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(MeshFilter))]
 public class Item : MonoBehaviour
 {
     private ParticleSystem particleExplosion;
+    private MeshFilter meshFilter;
+    public float Size => meshFilter.sharedMesh.bounds.size.x;
 
-    public float Size => GetComponent<MeshFilter>().sharedMesh.bounds.size.x; // or Z ???? refactor Later
-
-    public void FirstInitialize(Vector3 initPosition, ParticleSystem particleExplosion)
+    private void Awake()
     {
-        transform.position = initPosition;
-        this.particleExplosion = particleExplosion;
+        meshFilter = GetComponent<MeshFilter>();    
     }
-    
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent<Player>(out Player player))
@@ -21,8 +21,14 @@ public class Item : MonoBehaviour
             particleExplosion.transform.position = transform.position;
             particleExplosion.Play();
             Destroy(gameObject);
+
+            // method to Spawner (colect item)
         }
     }
 
- 
+    public void FirstInitialize(Vector3 initPosition, ParticleSystem particleExplosion)
+    {
+        transform.position = initPosition;
+        this.particleExplosion = particleExplosion;
+    }
 }

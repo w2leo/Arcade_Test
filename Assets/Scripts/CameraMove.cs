@@ -10,16 +10,15 @@ public class CameraMove : MonoBehaviour
     [SerializeField] private float zCameraOffset = -5f;
 
     private Vector3 CameraOffset => new Vector3(0f, cameraHeight, zCameraOffset);
-
     private Vector3 CameraPosition => player.transform.position + CameraOffset;
-
-    public void SetCameraToPlayer()
-    {
-        transform.position = CameraPosition;
-    }
 
     private void LateUpdate()
     {
         SetCameraToPlayer();
+    }
+
+    public void SetCameraToPlayer()
+    {
+        transform.position = CameraPosition;
     }
 }

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5766130776432970324}
   - component: {fileID: 6865128759052127838}
   m_Layer: 0
-  m_Name: RightHand
+  m_Name: LeftHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -112,7 +112,7 @@ GameObject:
   - component: {fileID: 110088432977112602}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -252,7 +252,7 @@ GameObject:
   - component: {fileID: 5858777998661916556}
   - component: {fileID: 1398654448743689862}
   m_Layer: 0
-  m_Name: LeftHand
+  m_Name: RightHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

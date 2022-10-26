@@ -6,10 +6,9 @@ using UnityEngine;
 public class Ground : MonoBehaviour
 {
     private BoxCollider boxCollider;
+
     public float xMax => boxCollider.size.x * transform.localScale.x / 2;
-
     public float zMax => boxCollider.size.z * transform.localScale.z / 2;
-
     public float Area => xMax * zMax * 4;
 
     private void Awake()
