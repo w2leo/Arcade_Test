@@ -14,11 +14,11 @@ public class CameraMove : MonoBehaviour
 
     private void LateUpdate()
     {
-        SetCameraToPlayer();
+        transform.position = CameraPosition;
     }
 
-    public void SetCameraToPlayer()
+    public void SetCameraToDefaultPosition()
     {
-        transform.position = CameraPosition;
+        transform.position = CameraOffset;
     }
 }

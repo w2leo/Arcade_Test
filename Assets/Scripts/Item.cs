@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 [RequireComponent(typeof(MeshFilter))]
@@ -7,6 +8,10 @@ public class Item : MonoBehaviour
 {
     private ParticleSystem particleExplosion;
     private MeshFilter meshFilter;
+    private GameController gameController;
+
+    public int ItemIndex { get; private set; }
+
     public float Size => meshFilter.sharedMesh.bounds.size.x;
 
     private void Awake()
@@ -18,17 +23,23 @@ public class Item : MonoBehaviour
     {
         if (other.TryGetComponent<Player>(out Player player))
         {
-            particleExplosion.transform.position = transform.position;
-            particleExplosion.Play();
-            Destroy(gameObject);
-
-            // method to Spawner (colect item)
+            PlayExplosion();
+            // do smth with Player
+            gameController.CollectItem(this);
         }
     }
 
-    public void FirstInitialize(Vector3 initPosition, ParticleSystem particleExplosion)
+    private void PlayExplosion()
+    {
+        particleExplosion.transform.position = transform.position;
+        particleExplosion.Play();
+    }
+
+    public void FirstInitialize(Vector3 initPosition, ParticleSystem particleExplosion, GameController gameController, int index)
     {
         transform.position = initPosition;
         this.particleExplosion = particleExplosion;
+        this.gameController = gameController;
+        ItemIndex = index;
     }
 }

@@ -3,23 +3,29 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Player))]
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private float moveSpeed;
     [SerializeField] private float acceleration;
     [SerializeField] private Joystick joysticInput;
-    
+
+    private Player player;
     private Rigidbody playerRb;
 
     private void Start()
     {
+        player = GetComponent<Player>();
         playerRb = GetComponent<Rigidbody>();
     }
 
     private void Update()
     {
-        Vector3 direction = GetDirection();
-        playerRb.velocity = Vector3.Lerp(playerRb.velocity, direction * moveSpeed, acceleration * Time.deltaTime);
+        if (GameController.GameIsActive)
+        {
+            Vector3 direction = GetDirection();
+            playerRb.velocity = Vector3.Lerp(playerRb.velocity, direction * moveSpeed, acceleration * Time.deltaTime);
+        }
     }
 
     private Vector3 GetDirection()

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CompareSpeedTest : MonoBehaviour
+public static class CompareSpeedTest
 {
     //CompareSpeedTest.TEST_COMPARE<Player, Item>(other.transform, "Player", "MainCamera", 100000);
 
