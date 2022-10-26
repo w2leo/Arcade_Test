@@ -12,7 +12,7 @@ public class Spawner : MonoBehaviour
     private void Awake()
     {
         spawnedItems = new List<Item>();
-        SpawnItems(CountItemsToSpawn());   
+        //SpawnItems(CountItemsToSpawn());   
     }
 
     private int CountItemsToSpawn() // Not Implemented
