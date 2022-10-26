@@ -7,20 +7,31 @@ public class Spawner : MonoBehaviour
     [SerializeField] List<Item> itemPrefabs;
     [SerializeField] ParticleSystem particleExplosion;
     [SerializeField] Ground ground;
+    [SerializeField] CameraMove mainCameraMove;
     private List<Item> spawnedItems;
 
     private void Awake()
     {
         spawnedItems = new List<Item>();
-        //SpawnItems(CountItemsToSpawn());   
+        mainCameraMove.SetCameraToPlayer();
+        SpawnNewItems(CountItemsToSpawn());   
+    }
+
+    public void SpawnNewItems()
+    {
+        DestroyAllItems();
+        SpawnNewItems(CountItemsToSpawn());
     }
 
     private int CountItemsToSpawn() // Not Implemented
     {
-        return Random.Range(20, 30);
+        int result = Mathf.RoundToInt((ground.Area / CameraViewState.ViewArea));
+        Debug.Log($"rArea = {ground.Area}, viewArea = {CameraViewState.ViewArea}, itemsCount = {result}");
+                
+        return result;
     }
 
-    private void SpawnItems(int countItems)
+    private void SpawnNewItems(int countItems)
     {
         for (int i = 0; i < countItems; i++)
         {
@@ -28,6 +39,21 @@ public class Spawner : MonoBehaviour
             spawnedItems.Add(newItem);
             newItem.FirstInitialize(GetRandomPosition(ground.xMax, ground.zMax, newItem.Size), particleExplosion);
         }
+    }
+
+    private void DestroyAllItems()
+    {
+        foreach (var e in spawnedItems)
+        {
+            Destroy(e.gameObject);
+        }
+        spawnedItems.Clear();
+    }
+
+    private void DestroyItem(int index)
+    {
+        Destroy(spawnedItems[index].gameObject);
+        spawnedItems.RemoveAt(index);
     }
 
     private T ChooseItemToSpawn<T>(List<T> items)

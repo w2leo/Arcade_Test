@@ -825,8 +825,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 7039506126618709232}
   moveSpeed: 5
-  playerOffset: {x: 0, y: 10, z: -5}
-  canvas: {fileID: 597541127}
+  cameraHeight: 10
+  zCameraOffset: -5
 --- !u!1 &997442642
 GameObject:
   m_ObjectHideFlags: 0
@@ -1087,19 +1087,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1166750647}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 963194229}
-        m_TargetAssemblyTypeName: CameraMove, Assembly-CSharp
-        m_MethodName: TestCameraSize
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1166750647
 MonoBehaviour:
   m_ObjectHideFlags: 0
