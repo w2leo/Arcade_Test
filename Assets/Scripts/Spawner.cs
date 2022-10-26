@@ -1,13 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Spawner : MonoBehaviour
 {
+    [SerializeField] private int screensForItem;
     [SerializeField] List<Item> itemPrefabs;
     [SerializeField] ParticleSystem particleExplosion;
     [SerializeField] Ground ground;
     [SerializeField] CameraMove mainCameraMove;
+    [SerializeField] InputField inputN;
     private List<Item> spawnedItems;
 
     private void Awake()
@@ -25,8 +28,9 @@ public class Spawner : MonoBehaviour
 
     private int CountItemsToSpawn() // Not Implemented
     {
-        int result = Mathf.RoundToInt((ground.Area / CameraViewState.ViewArea));
-        Debug.Log($"rArea = {ground.Area}, viewArea = {CameraViewState.ViewArea}, itemsCount = {result}");
+        int screensCount = Mathf.RoundToInt((ground.Area / CameraViewState.ViewArea));
+        int result = Mathf.RoundToInt(screensCount / screensForItem);
+        Debug.Log($"rArea = {ground.Area}, viewArea = {CameraViewState.ViewArea}, screensCount = {screensCount}, items = {result}");
                 
         return result;
     }
