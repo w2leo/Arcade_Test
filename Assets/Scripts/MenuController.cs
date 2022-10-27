@@ -15,20 +15,20 @@ public class MenuController : MonoBehaviour
         GameController.NotifyGameState += MenuHandle;
     }
 
-    public void ShowEndGameMenu(string text)
+    private void ShowEndGameMenu(string text)
     {
         gameObject.SetActive(true);
         finalText.gameObject.SetActive(true);
         finalText.text = text;
     }
 
-    public void ShowStartMenu()
+    private void ShowStartMenu()
     {
         gameObject.SetActive(true);
         finalText.gameObject.SetActive(false);
     }
 
-    public void HideMenu()
+    private void HideMenu()
     {
         gameObject.SetActive(false);
     }

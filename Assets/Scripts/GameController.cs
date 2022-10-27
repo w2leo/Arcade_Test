@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -9,8 +10,8 @@ public class GameController : MonoBehaviour
 {
     [SerializeField] Spawner spawner;
     [SerializeField] Player player;
-    [SerializeField] TextMeshProUGUI itemsText;
-    [SerializeField] TextMeshProUGUI timerText;
+    //[SerializeField] TextMeshProUGUI itemsText;
+    //[SerializeField] TextMeshProUGUI timerText;
 
     [SerializeField] MenuController menuPanel;
     [SerializeField] CameraMove mainCameraMove;
@@ -25,8 +26,9 @@ public class GameController : MonoBehaviour
     public static GameState CurrentGameState { get; private set; }
 
     public int RemainItems => itemKeyList.Count;
-
+    public int SpawnedItems => spawnedItems;
     public int CollectedItems => spawnedItems - RemainItems;
+    public float RemainTime => Mathf.Round(maxLevelTime - currentTime);
 
     public delegate void ControllerHandler(GameState gameState);
     public static event ControllerHandler NotifyGameState;
@@ -45,8 +47,6 @@ public class GameController : MonoBehaviour
         itemKeyList.Clear();
     }
 
-
-
     IEnumerator LevelInitialization()
     {
         ground.ChangeSize(devTools.GetGroundScale());
@@ -60,9 +60,9 @@ public class GameController : MonoBehaviour
             yield break;
         }
 
-        maxLevelTime = spawnedItems * devTools.GetTimeForItem();
-        currentTime = 0;
-        ChangeTextState(true);
+
+        //ChangeTextState(true);
+        SetLevelTime();
         ItemListInit();
         SpawnPlayer();
 
@@ -71,6 +71,12 @@ public class GameController : MonoBehaviour
             itemKeyList.Add(i, spawner.SpawnNewItem(ground.xMax, ground.zMax, this, i));
         }
         ChangeGameState(GameState.Active);
+    }
+
+    private void SetLevelTime()
+    {
+        maxLevelTime = spawnedItems * devTools.GetTimeForItem();
+        currentTime = 0;
     }
 
     private void ChangeGameState(GameState newGameState)
@@ -96,8 +102,8 @@ public class GameController : MonoBehaviour
         if (CurrentGameState == GameState.Active)
         {
             currentTime += Time.deltaTime;
-            timerText.text = $"{(int)(maxLevelTime - currentTime)} sec. left";
-            itemsText.text = $"Items: {CollectedItems} / {spawnedItems}";
+            //timerText.text = $"{(int)(maxLevelTime - currentTime)} sec. left";
+            //itemsText.text = $"Items: {CollectedItems} / {spawnedItems}";
 
             if (currentTime > maxLevelTime || RemainItems == 0)
             {
@@ -108,9 +114,7 @@ public class GameController : MonoBehaviour
 
     public void EndGame()
     {
-        ChangeTextState(false);
-
-        // Show EndGame Panel
+        //ChangeTextState(false);
         if (RemainItems > 0)
         {
             ChangeGameState(GameState.Loose);
@@ -121,16 +125,15 @@ public class GameController : MonoBehaviour
             ChangeGameState(GameState.Win);
             Debug.Log("You win");
         }
-        //menuPanel.ShowEndGameMenu(CurrentGameState);
     }
 
 
 
-    private void ChangeTextState(bool state)
-    {
-        itemsText.gameObject.SetActive(state);
-        timerText.gameObject.SetActive(state);
-    }
+    //private void ChangeTextState(bool state)
+    //{
+    //    itemsText.gameObject.SetActive(state);
+    //    timerText.gameObject.SetActive(state);
+    //}
 
     private void SpawnPlayer()
     {
