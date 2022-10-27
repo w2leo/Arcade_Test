@@ -23,16 +23,10 @@ public class Item : MonoBehaviour
     {
         if (other.TryGetComponent<Player>(out Player player))
         {
+            // do smth with Player and itself
             PlayExplosion();
-            // do smth with Player
             gameController.CollectItem(this);
         }
-    }
-
-    private void PlayExplosion()
-    {
-        particleExplosion.transform.position = transform.position;
-        particleExplosion.Play();
     }
 
     public void FirstInitialize(Vector3 initPosition, ParticleSystem particleExplosion, GameController gameController, int index)
@@ -42,4 +36,10 @@ public class Item : MonoBehaviour
         this.gameController = gameController;
         ItemIndex = index;
     }
+
+    private void PlayExplosion()
+    {
+        particleExplosion.transform.position = transform.position;
+        particleExplosion.Play();
+    } 
 }

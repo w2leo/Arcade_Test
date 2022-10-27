@@ -10,17 +10,14 @@ public class GameController : MonoBehaviour
 {
     [SerializeField] Spawner spawner;
     [SerializeField] Player player;
-    //[SerializeField] TextMeshProUGUI itemsText;
-    //[SerializeField] TextMeshProUGUI timerText;
-
     [SerializeField] MenuController menuPanel;
     [SerializeField] CameraMove mainCameraMove;
     [SerializeField] Ground ground;
-    [SerializeField] DeveloperTools devTools;
+    [SerializeField] DeveloperTools devTools; // instead of Game Conditions
 
     private Dictionary<int, Item> itemKeyList = new Dictionary<int, Item>();
     private float maxLevelTime;
-    private float currentTime;
+    private float currentLevelTime;
     private int spawnedItems;
 
     public static GameState CurrentGameState { get; private set; }
@@ -28,14 +25,14 @@ public class GameController : MonoBehaviour
     public int RemainItems => itemKeyList.Count;
     public int SpawnedItems => spawnedItems;
     public int CollectedItems => spawnedItems - RemainItems;
-    public float RemainTime => Mathf.Round(maxLevelTime - currentTime);
+    public float RemainTime => Mathf.Round(maxLevelTime - currentLevelTime);
 
     public delegate void ControllerHandler(GameState gameState);
     public static event ControllerHandler NotifyGameState;
 
     private void Start()
     {
-       ChangeGameState(GameState.Stop);
+        ChangeGameState(GameState.Stop);
     }
 
     private void ItemListInit()
@@ -50,33 +47,34 @@ public class GameController : MonoBehaviour
     IEnumerator LevelInitialization()
     {
         ground.ChangeSize(devTools.GetGroundScale());
-        yield return null; // Go to nex Frame after Ground change size
+        yield return null;      // Go to nex Frame after Ground changed size
         spawnedItems = CountItemsToSpawn();
 
         if (spawnedItems < 1)
         {
-           // menuPanel.gameObject.SetActive(true);
             devTools.ShowErrorMessage("Wrong scene initialization.  items to spawn");
             yield break;
         }
-
-
-        //ChangeTextState(true);
         SetLevelTime();
         ItemListInit();
         SpawnPlayer();
+        AddItemsToDictionary();
 
+        ChangeGameState(GameState.Active);
+    }
+
+    private void AddItemsToDictionary()
+    {
         for (int i = 0; i < spawnedItems; i++)
         {
             itemKeyList.Add(i, spawner.SpawnNewItem(ground.xMax, ground.zMax, this, i));
         }
-        ChangeGameState(GameState.Active);
     }
 
     private void SetLevelTime()
     {
         maxLevelTime = spawnedItems * devTools.GetTimeForItem();
-        currentTime = 0;
+        currentLevelTime = 0;
     }
 
     private void ChangeGameState(GameState newGameState)
@@ -101,11 +99,8 @@ public class GameController : MonoBehaviour
     {
         if (CurrentGameState == GameState.Active)
         {
-            currentTime += Time.deltaTime;
-            //timerText.text = $"{(int)(maxLevelTime - currentTime)} sec. left";
-            //itemsText.text = $"Items: {CollectedItems} / {spawnedItems}";
-
-            if (currentTime > maxLevelTime || RemainItems == 0)
+            currentLevelTime += Time.deltaTime;
+             if (currentLevelTime > maxLevelTime || RemainItems == 0)
             {
                 EndGame();
             }
@@ -114,26 +109,8 @@ public class GameController : MonoBehaviour
 
     public void EndGame()
     {
-        //ChangeTextState(false);
-        if (RemainItems > 0)
-        {
-            ChangeGameState(GameState.Loose);
-            Debug.Log("You loose");
-        }
-        else
-        {
-            ChangeGameState(GameState.Win);
-            Debug.Log("You win");
-        }
+        ChangeGameState(RemainItems == 0 ? GameState.Win : GameState.Loose);
     }
-
-
-
-    //private void ChangeTextState(bool state)
-    //{
-    //    itemsText.gameObject.SetActive(state);
-    //    timerText.gameObject.SetActive(state);
-    //}
 
     private void SpawnPlayer()
     {
