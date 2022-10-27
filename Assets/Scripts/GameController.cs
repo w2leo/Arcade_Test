@@ -19,9 +19,8 @@ public class GameController : MonoBehaviour
     private float maxLevelTime;
     private float currentTime;
     private int spawnedItems;
-    private bool gameIsActive;
-
-    public static bool GameIsActive => GameIsActive;
+    
+    public static bool GameIsActive { get; private set; }
 
     public int RemainItems => itemKeyList.Count;
 
@@ -30,7 +29,7 @@ public class GameController : MonoBehaviour
     private void Awake()
     {
         ChangeTextState(false);
-        gameIsActive = false;
+        GameIsActive = false;
     }
 
     private void ItemListInit()
@@ -44,7 +43,7 @@ public class GameController : MonoBehaviour
 
     public void StartGame()
     {
-        gameIsActive = true;
+        GameIsActive = true;
         maxLevelTime = inputLevelTime.InputValue;
         currentTime = 0;
         ChangeTextState(true);
@@ -83,7 +82,7 @@ public class GameController : MonoBehaviour
 
     public void EndGame()
     {
-        gameIsActive = false;
+        GameIsActive = false;
         ChangeTextState(false);
         // Show EndGame Panel
         if (RemainItems > 0)

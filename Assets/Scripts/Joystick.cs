@@ -19,7 +19,6 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
     public Vector2 Direction2D => new Vector2(Horizontal, Vertical);
     public Vector3 Direction3d => new Vector3(Horizontal, 0, Vertical);
 
-
     private void Awake()
     {
         input = Vector2.zero;
