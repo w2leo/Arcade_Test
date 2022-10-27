@@ -33,7 +33,6 @@ public class MenuController : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-
     private void MenuHandle(GameState gameState)
     {
         switch (gameState)

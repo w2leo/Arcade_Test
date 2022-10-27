@@ -21,7 +21,6 @@ public class GameController : MonoBehaviour
     private int spawnedItems;
 
     public static GameState CurrentGameState { get; private set; }
-
     public int RemainItems => itemKeyList.Count;
     public int SpawnedItems => spawnedItems;
     public int CollectedItems => spawnedItems - RemainItems;
@@ -35,6 +34,41 @@ public class GameController : MonoBehaviour
         ChangeGameState(GameState.Stop);
     }
 
+    private void Update()
+    {
+        if (CurrentGameState == GameState.Active)
+        {
+            currentLevelTime += Time.deltaTime;
+            if (currentLevelTime > maxLevelTime || RemainItems == 0)
+            {
+                EndGame();
+            }
+        }
+    }
+
+    public void StartGame()
+    {
+        StartCoroutine(LevelInitialization());
+    }
+
+    public void EndGame()
+    {
+        ChangeGameState(RemainItems == 0 ? GameState.Win : GameState.Loose);
+    }
+
+    public void CollectItem(Item item)
+    {
+        int index = item.ItemIndex;
+        itemKeyList.Remove(item.ItemIndex);
+        Destroy(item.gameObject);
+    }
+
+    private void ChangeGameState(GameState newGameState)
+    {
+        CurrentGameState = newGameState;
+        NotifyGameState(newGameState);
+    }
+
     private void ItemListInit()
     {
         foreach (var keyPair in itemKeyList)
@@ -42,6 +76,34 @@ public class GameController : MonoBehaviour
             Destroy(keyPair.Value.gameObject);
         }
         itemKeyList.Clear();
+    }
+
+    private void AddItemsToDictionary()
+    {
+        for (int i = 0; i < spawnedItems; i++)
+        {
+            itemKeyList.Add(i, spawner.SpawnNewItem(ground.xMax, ground.zMax, this, i));
+        }
+    }
+
+    private void SetLevelTime()
+    {
+        maxLevelTime = spawnedItems * devTools.GetTimeForItem();
+        currentLevelTime = 0;
+    }
+
+    private void SpawnPlayer()
+    {
+        player.transform.position = Position.GetRandomPosition(ground.xMax, ground.zMax);
+        player.gameObject.SetActive(true);
+    }
+
+    private int CountItemsToSpawn()
+    {
+        mainCameraMove.SetCameraToDefaultPosition();
+        int screensCount = Mathf.RoundToInt((ground.Area / CameraViewState.ViewArea));
+        int result = Mathf.RoundToInt(screensCount / devTools.GetScreensForItem());
+        return result;
     }
 
     IEnumerator LevelInitialization()
@@ -59,70 +121,6 @@ public class GameController : MonoBehaviour
         ItemListInit();
         SpawnPlayer();
         AddItemsToDictionary();
-
         ChangeGameState(GameState.Active);
-    }
-
-    private void AddItemsToDictionary()
-    {
-        for (int i = 0; i < spawnedItems; i++)
-        {
-            itemKeyList.Add(i, spawner.SpawnNewItem(ground.xMax, ground.zMax, this, i));
-        }
-    }
-
-    private void SetLevelTime()
-    {
-        maxLevelTime = spawnedItems * devTools.GetTimeForItem();
-        currentLevelTime = 0;
-    }
-
-    private void ChangeGameState(GameState newGameState)
-    {
-        CurrentGameState = newGameState;
-        NotifyGameState(newGameState);
-    }
-
-    public void StartGame()
-    {
-        StartCoroutine(LevelInitialization());
-    }
-
-    public void CollectItem(Item item)
-    {
-        int index = item.ItemIndex;
-        itemKeyList.Remove(item.ItemIndex);
-        Destroy(item.gameObject);
-    }
-
-    private void Update()
-    {
-        if (CurrentGameState == GameState.Active)
-        {
-            currentLevelTime += Time.deltaTime;
-             if (currentLevelTime > maxLevelTime || RemainItems == 0)
-            {
-                EndGame();
-            }
-        }
-    }
-
-    public void EndGame()
-    {
-        ChangeGameState(RemainItems == 0 ? GameState.Win : GameState.Loose);
-    }
-
-    private void SpawnPlayer()
-    {
-        player.transform.position = Position.GetRandomPosition(ground.xMax, ground.zMax);
-        player.gameObject.SetActive(true);
-    }
-
-    private int CountItemsToSpawn()
-    {
-        mainCameraMove.SetCameraToDefaultPosition();
-        int screensCount = Mathf.RoundToInt((ground.Area / CameraViewState.ViewArea));
-        int result = Mathf.RoundToInt(screensCount / devTools.GetScreensForItem());
-        return result;
     }
 }

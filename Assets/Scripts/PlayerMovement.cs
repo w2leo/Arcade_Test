@@ -10,12 +10,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float acceleration;
     [SerializeField] private Joystick joysticInput;
 
-    private Player player;
     private Rigidbody playerRb;
 
     private void Start()
     {
-        player = GetComponent<Player>();
         playerRb = GetComponent<Rigidbody>();
     }
 
@@ -23,9 +21,13 @@ public class PlayerMovement : MonoBehaviour
     {
         if (GameController.CurrentGameState == GameState.Active)
         {
-            Vector3 direction = GetDirection();
-            playerRb.velocity = Vector3.Lerp(playerRb.velocity, direction * moveSpeed, acceleration * Time.deltaTime);
+            MovePlayer(GetDirection());       
         }
+    }
+
+    private void MovePlayer(Vector3 direction)
+    {
+        playerRb.velocity = Vector3.Lerp(playerRb.velocity, direction * moveSpeed, acceleration * Time.deltaTime);
     }
 
     private Vector3 GetDirection()

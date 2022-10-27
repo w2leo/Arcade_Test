@@ -12,13 +12,6 @@ public class Item : MonoBehaviour
 
     public int ItemIndex { get; private set; }
 
-    public float Size => meshFilter.sharedMesh.bounds.size.x;
-
-    private void Awake()
-    {
-        meshFilter = GetComponent<MeshFilter>();    
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent<Player>(out Player player))
@@ -41,5 +34,5 @@ public class Item : MonoBehaviour
     {
         particleExplosion.transform.position = transform.position;
         particleExplosion.Play();
-    } 
+    }
 }
