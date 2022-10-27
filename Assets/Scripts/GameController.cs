@@ -10,8 +10,8 @@ public class GameController : MonoBehaviour
     [SerializeField] Player player;
     [SerializeField] TextMeshProUGUI itemsText;
     [SerializeField] TextMeshProUGUI timerText;
-    [SerializeField] TMP_InputInt inputScreensForItem;
-    [SerializeField] TMP_InputInt inputLevelTime;
+    [SerializeField] TMP_UserInput inputScreensForItem;
+    [SerializeField] TMP_UserInput inputLevelTime;
     [SerializeField] CameraMove mainCameraMove;
     [SerializeField] Ground ground;
 

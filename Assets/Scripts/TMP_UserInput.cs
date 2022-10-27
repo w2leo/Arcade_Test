@@ -5,11 +5,11 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(TMP_InputField))]
-public class TMP_InputInt : MonoBehaviour
+public class TMP_UserInput : MonoBehaviour
 {
     private int inputValue;
     private TMP_InputField field;
-    private int defaultIntValue = 1;
+    private readonly int defaultIntValue = 1;
 
     public int InputValue => inputValue;
 
