@@ -11,6 +11,7 @@ public class GameController : MonoBehaviour
     [SerializeField] Player player;
     [SerializeField] TextMeshProUGUI itemsText;
     [SerializeField] TextMeshProUGUI timerText;
+
     [SerializeField] MenuController menuPanel;
     [SerializeField] CameraMove mainCameraMove;
     [SerializeField] Ground ground;
@@ -28,11 +29,11 @@ public class GameController : MonoBehaviour
     public int CollectedItems => spawnedItems - RemainItems;
 
     public delegate void ControllerHandler(GameState gameState);
-    public static event ControllerHandler Notify;
+    public static event ControllerHandler NotifyGameState;
 
-    private void Awake()
+    private void Start()
     {
-       // ChangeGameState(GameState.Stop);
+       ChangeGameState(GameState.Stop);
     }
 
     private void ItemListInit()
@@ -44,6 +45,8 @@ public class GameController : MonoBehaviour
         itemKeyList.Clear();
     }
 
+
+
     IEnumerator LevelInitialization()
     {
         ground.ChangeSize(devTools.GetGroundScale());
@@ -52,8 +55,9 @@ public class GameController : MonoBehaviour
 
         if (spawnedItems < 1)
         {
-            menuPanel.gameObject.SetActive(true);
-            throw new System.Exception("Wrong scene initialization. 0 items to spawn");
+           // menuPanel.gameObject.SetActive(true);
+            devTools.ShowErrorMessage("Wrong scene initialization.  items to spawn");
+            yield break;
         }
 
         maxLevelTime = spawnedItems * devTools.GetTimeForItem();
@@ -72,7 +76,7 @@ public class GameController : MonoBehaviour
     private void ChangeGameState(GameState newGameState)
     {
         CurrentGameState = newGameState;
-        Notify(newGameState);
+        NotifyGameState(newGameState);
     }
 
     public void StartGame()
@@ -117,7 +121,7 @@ public class GameController : MonoBehaviour
             ChangeGameState(GameState.Win);
             Debug.Log("You win");
         }
-        menuPanel.ShowEndGamePanen(CurrentGameState);
+        //menuPanel.ShowEndGameMenu(CurrentGameState);
     }
 
 

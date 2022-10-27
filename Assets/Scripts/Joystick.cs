@@ -19,13 +19,18 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
     public Vector2 Direction2D => new Vector2(Horizontal, Vertical);
     public Vector3 Direction3d => new Vector3(Horizontal, 0, Vertical);
 
+    private void Start()
+    {
+        GameController.NotifyGameState += JoistickHandle;
+    }
+
     private void Awake()
     {
         input = Vector2.zero;
         canvas = GetComponentInParent<Canvas>();
         if (canvas == null)
             Debug.LogError("The Joystick is not placed inside a canvas");
-        
+
         cam = canvas.worldCamera;
         Vector2 center = new Vector2(0.5f, 0.5f);
         background.pivot = center;
@@ -64,5 +69,10 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
         }
         else
             input = Vector2.zero;
+    }
+    
+    private void JoistickHandle(GameState gameState)
+    {
+        gameObject.SetActive(gameState == GameState.Active);
     }
 }

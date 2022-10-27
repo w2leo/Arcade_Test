@@ -10,18 +10,54 @@ public class MenuController : MonoBehaviour
 
     [SerializeField] TextMeshProUGUI finalText;
 
-    public void ShowEndGamePanen(GameState result)
+    private void Start()
     {
-        gameObject.SetActive(true);
-        if (result == GameState.Win)
-        {
-            finalText.text = WIN_TEXT;
-        }
-        else if (result == GameState.Loose)
-        {
-            finalText.text = LOOSE_TEXT;
-        }
+        GameController.NotifyGameState += MenuHandle;
     }
 
-    // subscribe to GameController events;
+    public void ShowEndGameMenu(string text)
+    {
+        gameObject.SetActive(true);
+        finalText.gameObject.SetActive(true);
+        finalText.text = text;
+    }
+
+    public void ShowStartMenu()
+    {
+        gameObject.SetActive(true);
+        finalText.gameObject.SetActive(false);
+    }
+
+    public void HideMenu()
+    {
+        gameObject.SetActive(false);
+    }
+
+
+    private void MenuHandle(GameState gameState)
+    {
+        switch (gameState)
+        {
+            case GameState.Win:
+                {
+                    ShowEndGameMenu(WIN_TEXT);
+                    break;
+                }
+            case GameState.Loose:
+                {
+                    ShowEndGameMenu(LOOSE_TEXT);
+                    break;
+                }
+            case GameState.Stop:
+                {
+                    ShowStartMenu();
+                    break;
+                }
+            case GameState.Active:
+                {
+                    HideMenu();
+                    break;
+                }
+        }
+    }
 }

@@ -11,10 +11,10 @@ public class Player : MonoBehaviour
     {
         gameObject.SetActive(false);
         playerRb = GetComponent<Rigidbody>();
-        GameController.Notify += DisplayMessage;
+        GameController.NotifyGameState += PlayerHandle;
     }
 
-    public void DisplayMessage(GameState gameState)
+    public void PlayerHandle(GameState gameState)
     {
         playerRb.isKinematic = gameState != GameState.Active;
         gameObject.SetActive(gameState == GameState.Active);
