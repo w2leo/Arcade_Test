@@ -25,7 +25,7 @@ public static class CameraViewState
         }
         else
         {
-            throw new Exception("Wrong gorund / camera view setup");
+            return -1;
         }
     }
 
@@ -33,7 +33,7 @@ public static class CameraViewState
     {
         Ray ray = mainCamera.ScreenPointToRay(new Vector3(rayScreenStart.x, rayScreenStart.y, 0));
         Physics.Raycast(ray, out RaycastHit hit);
-        if (hit.collider != null && hit.collider.TryGetComponent<Ground>(out _))
+        if (hit.collider != null && hit.collider.TryGetComponent<Ground>(out Ground gr))
         {
             hitPosition = hit.point;
             hitPosition.y = 0f;

@@ -22,4 +22,6 @@ public class MenuController : MonoBehaviour
             finalText.text = LOOSE_TEXT;
         }
     }
+
+    // subscribe to GameController events;
 }

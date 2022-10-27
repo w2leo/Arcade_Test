@@ -20,4 +20,9 @@ public class Ground : MonoBehaviour
     {
         transform.localScale = new Vector3(xScale, 1, zScale);
     }
+
+    public void ChangeSize(Vector2Int scaleXZ)
+    {
+        ChangeSize(scaleXZ.x, scaleXZ.y);
+    }
 }

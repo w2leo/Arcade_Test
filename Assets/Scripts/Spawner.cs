@@ -10,7 +10,7 @@ public class Spawner : MonoBehaviour
 
     public Item SpawnNewItem(float xMax, float zMax, GameController gameController, int index)
     {
-        Item newItem = Instantiate(ChooseItemToSpawn(itemPrefabs)).GetComponent<Item>();
+        Item newItem = Instantiate(ChooseItemToSpawn(itemPrefabs), transform).GetComponent<Item>();
         newItem.FirstInitialize(Position.GetRandomPosition(xMax, zMax), particleExplosion, gameController, index);
         return newItem;
     }

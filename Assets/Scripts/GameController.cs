@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq.Expressions;
 using TMPro;
 using UnityEngine;
@@ -10,31 +11,28 @@ public class GameController : MonoBehaviour
     [SerializeField] Player player;
     [SerializeField] TextMeshProUGUI itemsText;
     [SerializeField] TextMeshProUGUI timerText;
-    [SerializeField] TMP_UserInput inputScreensForItem;
-    [SerializeField] TMP_UserInput inputLevelTime;
-    [SerializeField] TMP_UserInput inputXscale;
-    [SerializeField] TMP_UserInput inputZscale;
     [SerializeField] MenuController menuPanel;
     [SerializeField] CameraMove mainCameraMove;
     [SerializeField] Ground ground;
+    [SerializeField] DeveloperTools devTools;
 
     private Dictionary<int, Item> itemKeyList = new Dictionary<int, Item>();
     private float maxLevelTime;
     private float currentTime;
     private int spawnedItems;
-    
-    //public static bool GameIsActive { get; private set; }
-    public static GameState CurrentGameState { get; private set; }
 
+    public static GameState CurrentGameState { get; private set; }
 
     public int RemainItems => itemKeyList.Count;
 
     public int CollectedItems => spawnedItems - RemainItems;
 
+    public delegate void ControllerHandler(GameState gameState);
+    public static event ControllerHandler Notify;
+
     private void Awake()
     {
-        //ChangeTextState(false);
-        CurrentGameState = GameState.NotStarted;
+       // ChangeGameState(GameState.Stop);
     }
 
     private void ItemListInit()
@@ -46,17 +44,19 @@ public class GameController : MonoBehaviour
         itemKeyList.Clear();
     }
 
-    public void StartGame()
+    IEnumerator LevelInitialization()
     {
-        ground.ChangeSize(inputXscale.InputValue, inputZscale.InputValue);
+        ground.ChangeSize(devTools.GetGroundScale());
+        yield return null; // Go to nex Frame after Ground change size
         spawnedItems = CountItemsToSpawn();
 
         if (spawnedItems < 1)
         {
+            menuPanel.gameObject.SetActive(true);
             throw new System.Exception("Wrong scene initialization. 0 items to spawn");
         }
 
-        maxLevelTime = inputLevelTime.InputValue;
+        maxLevelTime = spawnedItems * devTools.GetTimeForItem();
         currentTime = 0;
         ChangeTextState(true);
         ItemListInit();
@@ -66,8 +66,18 @@ public class GameController : MonoBehaviour
         {
             itemKeyList.Add(i, spawner.SpawnNewItem(ground.xMax, ground.zMax, this, i));
         }
-        CurrentGameState = GameState.Active;
+        ChangeGameState(GameState.Active);
+    }
 
+    private void ChangeGameState(GameState newGameState)
+    {
+        CurrentGameState = newGameState;
+        Notify(newGameState);
+    }
+
+    public void StartGame()
+    {
+        StartCoroutine(LevelInitialization());
     }
 
     public void CollectItem(Item item)
@@ -99,14 +109,12 @@ public class GameController : MonoBehaviour
         // Show EndGame Panel
         if (RemainItems > 0)
         {
-            CurrentGameState = GameState.Loose;
-            // Loose Panel
+            ChangeGameState(GameState.Loose);
             Debug.Log("You loose");
         }
         else
         {
-            CurrentGameState = GameState.Win;
-            // Win Panel
+            ChangeGameState(GameState.Win);
             Debug.Log("You win");
         }
         menuPanel.ShowEndGamePanen(CurrentGameState);
@@ -130,7 +138,7 @@ public class GameController : MonoBehaviour
     {
         mainCameraMove.SetCameraToDefaultPosition();
         int screensCount = Mathf.RoundToInt((ground.Area / CameraViewState.ViewArea));
-        int result = Mathf.RoundToInt(screensCount / inputScreensForItem.InputValue);
+        int result = Mathf.RoundToInt(screensCount / devTools.GetScreensForItem());
         return result;
     }
 }
