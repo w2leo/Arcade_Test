@@ -12,6 +12,9 @@ public class GameController : MonoBehaviour
     [SerializeField] TextMeshProUGUI timerText;
     [SerializeField] TMP_UserInput inputScreensForItem;
     [SerializeField] TMP_UserInput inputLevelTime;
+    [SerializeField] TMP_UserInput inputXscale;
+    [SerializeField] TMP_UserInput inputZscale;
+    [SerializeField] MenuController menuPanel;
     [SerializeField] CameraMove mainCameraMove;
     [SerializeField] Ground ground;
 
@@ -20,7 +23,9 @@ public class GameController : MonoBehaviour
     private float currentTime;
     private int spawnedItems;
     
-    public static bool GameIsActive { get; private set; }
+    //public static bool GameIsActive { get; private set; }
+    public static GameState CurrentGameState { get; private set; }
+
 
     public int RemainItems => itemKeyList.Count;
 
@@ -28,8 +33,8 @@ public class GameController : MonoBehaviour
 
     private void Awake()
     {
-        ChangeTextState(false);
-        GameIsActive = false;
+        //ChangeTextState(false);
+        CurrentGameState = GameState.NotStarted;
     }
 
     private void ItemListInit()
@@ -43,19 +48,26 @@ public class GameController : MonoBehaviour
 
     public void StartGame()
     {
-        GameIsActive = true;
+        ground.ChangeSize(inputXscale.InputValue, inputZscale.InputValue);
+        spawnedItems = CountItemsToSpawn();
+
+        if (spawnedItems < 1)
+        {
+            throw new System.Exception("Wrong scene initialization. 0 items to spawn");
+        }
+
         maxLevelTime = inputLevelTime.InputValue;
         currentTime = 0;
         ChangeTextState(true);
         ItemListInit();
         SpawnPlayer();
 
-        spawnedItems = CountItemsToSpawn();
-
         for (int i = 0; i < spawnedItems; i++)
         {
             itemKeyList.Add(i, spawner.SpawnNewItem(ground.xMax, ground.zMax, this, i));
         }
+        CurrentGameState = GameState.Active;
+
     }
 
     public void CollectItem(Item item)
@@ -67,7 +79,7 @@ public class GameController : MonoBehaviour
 
     private void Update()
     {
-        if (GameIsActive)
+        if (CurrentGameState == GameState.Active)
         {
             currentTime += Time.deltaTime;
             timerText.text = $"{(int)(maxLevelTime - currentTime)} sec. left";
@@ -82,33 +94,36 @@ public class GameController : MonoBehaviour
 
     public void EndGame()
     {
-        GameIsActive = false;
         ChangeTextState(false);
+
         // Show EndGame Panel
         if (RemainItems > 0)
         {
+            CurrentGameState = GameState.Loose;
             // Loose Panel
             Debug.Log("You loose");
         }
         else
         {
+            CurrentGameState = GameState.Win;
             // Win Panel
             Debug.Log("You win");
         }
-
+        menuPanel.ShowEndGamePanen(CurrentGameState);
     }
 
 
 
     private void ChangeTextState(bool state)
     {
-        itemsText.enabled = state;
-        timerText.enabled = state;
+        itemsText.gameObject.SetActive(state);
+        timerText.gameObject.SetActive(state);
     }
 
     private void SpawnPlayer()
     {
         player.transform.position = Position.GetRandomPosition(ground.xMax, ground.zMax);
+        player.gameObject.SetActive(true);
     }
 
     private int CountItemsToSpawn()

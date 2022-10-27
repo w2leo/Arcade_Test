@@ -15,4 +15,9 @@ public class Ground : MonoBehaviour
     {
         boxCollider = GetComponent<BoxCollider>();
     }
+
+    public void ChangeSize(int xScale, int zScale)
+    {
+        transform.localScale = new Vector3(xScale, 1, zScale);
+    }
 }

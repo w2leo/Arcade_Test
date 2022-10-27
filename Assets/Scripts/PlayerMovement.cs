@@ -21,7 +21,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        if (GameController.GameIsActive)
+        if (GameController.CurrentGameState == GameState.Active)
         {
             Vector3 direction = GetDirection();
             playerRb.velocity = Vector3.Lerp(playerRb.velocity, direction * moveSpeed, acceleration * Time.deltaTime);
