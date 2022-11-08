@@ -10,7 +10,7 @@ public class GameController : MonoBehaviour
 {
     [SerializeField] Spawner spawner;
     [SerializeField] Player player;
-    [SerializeField] MenuController menuPanel;
+    //[SerializeField] MenuController menuPanel;
     [SerializeField] CameraMove mainCameraMove;
     [SerializeField] Ground ground;
     [SerializeField] DeveloperTools devTools; // instead of Game Conditions
@@ -27,6 +27,7 @@ public class GameController : MonoBehaviour
     public float RemainTime => Mathf.Round(maxLevelTime - currentLevelTime);
 
     public delegate void ControllerHandler(GameState gameState);
+    
     public static event ControllerHandler NotifyGameState;
 
     private void Start()
@@ -48,6 +49,7 @@ public class GameController : MonoBehaviour
 
     public void StartGame()
     {
+
         StartCoroutine(LevelInitialization());
     }
 

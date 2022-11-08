@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-[RequireComponent(typeof(MeshFilter))]
 public class Item : MonoBehaviour
 {
     private ParticleSystem particleExplosion;
-    private MeshFilter meshFilter;
     private GameController gameController;
 
     public int ItemIndex { get; private set; }

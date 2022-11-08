@@ -30,14 +30,14 @@ public class TMP_UserInput : MonoBehaviour
 
     private bool TryParceIntNotZero(string text, out int intValue)
     {
-        if (!int.TryParse(text, out intValue))
+        if (!int.TryParse(text, out intValue) || intValue == 0)
         {
             return false;
         }
-        else if (intValue == 0)
-        {
-            return false;
-        }
+        //else if (intValue == 0)
+        //{
+        //    return false;
+        //}
         return true;
     }
 }
